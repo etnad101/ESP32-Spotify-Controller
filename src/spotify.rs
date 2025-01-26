@@ -6,7 +6,7 @@ pub enum PlayerAction {
     Pause,
     Play,
     Skip,
-    Prev
+    Prev,
 }
 
 pub struct SpotifyToken {
@@ -22,13 +22,23 @@ impl SpotifyToken {
             client_auth,
             api_token: String::new(),
         };
-        token.regenerate(); 
+        token.regenerate();
         token
     }
 
     pub fn regenerate(&mut self) {
-        let result = request(&format!("https://accounts.spotify.com/api/token?grant_type=refresh_token&refresh_token={}", self.refresh_token),
-        &[("Content-Type", "application/x-www-form-urlencoded"), ("Authorization", self.client_auth)], Method::Post).unwrap();
+        let result = request(
+            format!(
+                "https://accounts.spotify.com/api/token?grant_type=refresh_token&refresh_token={}",
+                self.refresh_token
+            ),
+            &[
+                ("Content-Type", "application/x-www-form-urlencoded"),
+                ("Authorization", self.client_auth),
+            ],
+            Method::Post,
+        )
+        .unwrap();
 
         let token_field = result.split(",").collect::<Vec<&str>>()[0];
         let token = token_field.split(":").collect::<Vec<&str>>()[1];
@@ -56,7 +66,11 @@ pub fn update_player(action: PlayerAction, token: &SpotifyToken) {
     };
 
     let url = String::from("https://api.spotify.com/v1/me/player/") + endpoint;
-    println!("\n\nURL: {}, \n\nTOKEN: {}\n\n", url, token.bearer().as_str());
+    println!(
+        "\n\nURL: {}, \n\nTOKEN: {}\n\n",
+        url,
+        token.bearer().as_str()
+    );
     if let Err(e) = request(url, &[("Authorization", token.bearer().as_str())], method) {
         println!("{}", e);
     }

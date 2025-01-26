@@ -4,8 +4,7 @@ use embedded_svc::{
     http::{client::Client, Method},
     io::Read,
 };
-use esp_idf_svc::
-    http::client::{Configuration, EspHttpConnection};
+use esp_idf_svc::http::client::{Configuration, EspHttpConnection};
 
 use crate::util::remove_first_and_last;
 
@@ -21,7 +20,7 @@ pub fn request(url: impl AsRef<str>, headers: &[(&str, &str)], method: Method) -
     let mut client = Client::wrap(connection);
 
     // 2. Open a GET request to `url`
-    let request = client.request(method, url.as_ref(), &headers)?;
+    let request = client.request(method, url.as_ref(), headers)?;
 
     // 3. Submit write request and check the status code of the response.
     // Successful http status codes are in the 200..=299 range.

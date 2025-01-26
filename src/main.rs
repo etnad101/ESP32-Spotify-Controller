@@ -1,8 +1,8 @@
-mod wifi;
 mod button;
-mod spotify;
 mod request;
+mod spotify;
 mod util;
+mod wifi;
 
 use anyhow::Result;
 use core::str;
@@ -11,9 +11,9 @@ use esp_idf_svc::{
     hal::{delay::Delay, gpio::PinDriver, prelude::Peripherals},
 };
 
-use wifi::wifi;
 use button::Button;
 use spotify::{update_player, PlayerAction, SpotifyToken};
+use wifi::wifi;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -26,7 +26,6 @@ pub struct Config {
     #[default("")]
     client_auth: &'static str,
 }
-
 
 fn main() -> Result<()> {
     esp_idf_svc::sys::link_patches();
@@ -60,7 +59,7 @@ fn main() -> Result<()> {
         Err(e) => return Err(e),
     };
 
-    let token = SpotifyToken::new(&app_config.refresh_token, &app_config.client_auth);
+    let token = SpotifyToken::new(app_config.refresh_token, app_config.client_auth);
 
     let delay = Delay::new_default();
 
