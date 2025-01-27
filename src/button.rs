@@ -1,19 +1,19 @@
-use esp_idf_svc::hal::gpio::{InterruptType, PinDriver, Pull};
+use esp_idf_svc::hal::gpio::{Input, InputPin, InterruptType, OutputPin, PinDriver, Pull};
 
 pub struct Button<T>
 where
-    T: esp_idf_svc::hal::gpio::InputPin + esp_idf_svc::hal::gpio::OutputPin,
+    T: InputPin + OutputPin,
 {
     held: bool,
     clicked: bool,
     prev: bool,
-    pin: PinDriver<'static, T, esp_idf_svc::hal::gpio::Input>,
+    pin: PinDriver<'static, T, Input>,
 }
 
 #[allow(dead_code)]
 impl<T> Button<T>
 where
-    T: esp_idf_svc::hal::gpio::InputPin + esp_idf_svc::hal::gpio::OutputPin,
+    T: InputPin + OutputPin,
 {
     pub fn new(pin: T) -> Self {
         let mut pin = PinDriver::input(pin).unwrap();
